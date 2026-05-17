@@ -1,0 +1,422 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --theme-color: #00ffcc;
+    --theme-rgb: 0, 255, 204;
+}
+
+body.amber-theme {
+    --theme-color: #ff9900;
+    --theme-rgb: 255, 153, 0;
+}
+
+/* Tema Easter Egg: Matrix */
+body.matrix-theme {
+    --theme-color: #00ff00;
+    --theme-rgb: 0, 255, 0;
+}
+
+/* Cursor personalizado de Nave Espacial */
+body {
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--theme-color);
+    overflow: hidden; 
+    background-color: #050510;
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%2300ffcc" stroke="%23050510" stroke-width="1.5" d="M12 2L4 20l8-4 8 4z"/></svg>') 12 12, auto;
+    -webkit-app-region: drag; /* Permite arrastrar la ventana desde el fondo */
+}
+
+/* Cursor alternativo al pasar sobre botones */
+button, input, label, .discrete-btn, .fav-card {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="%23ff9900" stroke="%23050510" stroke-width="1.5" d="M12 2L4 20l8-4 8 4z"/></svg>') 12 12, pointer !important;
+}
+
+/* Desactivar el arrastre en los elementos con los que interactuamos */
+button, input, label, .content-wrapper, .gallery-container, a {
+    -webkit-app-region: no-drag;
+}
+
+/* Tema de Fuente Pixel Art */
+body.pixel-font,
+body.pixel-font input,
+body.pixel-font button,
+body.pixel-font .typewriter-text,
+body.pixel-font #apod-title {
+    font-family: 'VT323', 'Courier New', monospace;
+    letter-spacing: 1.5px;
+    font-size: 1.05rem;
+}
+
+/* Filtro Avanzado CRT (Curvatura, viñeta y reflejo de monitor) */
+body.crt-enabled::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999; /* Sobre toda la interfaz */
+    /* Sombras internas para simular la profundidad y curvatura del cristal */
+    box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.95), inset 0 0 40px rgba(var(--theme-rgb), 0.15);
+    /* Reflejo esférico para dar sensación de volumen */
+    background: radial-gradient(circle at center, transparent 55%, rgba(0, 5, 10, 0.5) 100%);
+    border-radius: 12px;
+}
+
+#space-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    opacity: 0.7; /* Oscurece ligeramente la imagen para legibilidad del texto */
+    transition: background-image 1.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+/* Clase para ver la imagen completa sin recortes */
+body.contain-image #space-background {
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* Easter Egg: Giro de barril (Spin) */
+.spin-anim {
+    animation: barrel-roll 1s ease-in-out;
+}
+
+@keyframes barrel-roll {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Estilo para el reproductor de video */
+#space-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: auto; /* Permite interactuar con el video */
+}
+
+/* Canvas de polvo estelar (Partículas) */
+#stardust-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Crucial para no bloquear clics */
+    z-index: 0;
+}
+
+/* Canvas de estela del mouse (Partículas) */
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* Crucial: para no bloquear clics en los botones */
+    z-index: 50; /* Un valor alto para estar SOBRE el fondo pero BAJO los paneles modales */
+    background: transparent;
+}
+
+/* Filtro CRT estático sobre la imagen (Líneas de escaneo) */
+body.vhs-enabled #space-background::after {
+    opacity: 1;
+}
+
+#space-background::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(rgba(var(--theme-rgb), 0) 50%, rgba(0, 20, 30, 0.15) 50%);
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.dashboard-panel {
+    position: absolute;
+    bottom: 8%;
+    left: 5%;
+    width: 45%;
+    min-width: 300px;
+    max-width: 90vw;
+    max-height: 85vh;
+    background: rgba(0, 20, 30, 0.65);
+    border: 1px solid var(--theme-color);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 0 20px rgba(var(--theme-rgb), 0.15);
+    backdrop-filter: blur(8px); /* Efecto cristal de nave */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    overflow-y: auto;
+}
+
+#apod-title {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid rgba(var(--theme-rgb), 0.4);
+    padding-bottom: 10px;
+}
+
+.content-wrapper {
+    max-height: 280px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Estilo para el texto, preparándolo para el efecto de máquina de escribir */
+.typewriter-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e0fbfc;
+}
+
+/* Scrollbar personalizado para seguir el estilo Sci-Fi */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: rgba(0, 20, 30, 0.5); 
+}
+::-webkit-scrollbar-thumb {
+    background: var(--theme-color); 
+}
+
+/* --- Modales y Formularios (API Key) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 5, 10, 0.85);
+    backdrop-filter: blur(12px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.modal-overlay.hidden {
+    display: none !important;
+}
+
+.modal-content {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-content h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: var(--theme-color);
+    text-transform: uppercase;
+}
+
+.modal-content p {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    color: #e0fbfc;
+}
+
+#api-key-input, #secret-input, #fav-search-input, #user-name-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: rgba(0, 20, 30, 0.7);
+    border: 1px solid var(--theme-color);
+    border-radius: 4px;
+    color: var(--theme-color);
+    font-family: 'Courier New', Courier, monospace;
+    outline: none;
+}
+
+#save-key-btn, #secret-submit {
+    background: var(--theme-color);
+    color: #050510;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: box-shadow 0.3s ease;
+}
+
+#save-key-btn:hover, #secret-submit:hover {
+    box-shadow: 0 0 15px rgba(var(--theme-rgb), 0.6);
+}
+
+.discrete-btn {
+    background: none;
+    border: none;
+    color: rgba(var(--theme-rgb), 0.5);
+    font-family: inherit;
+    font-size: 0.75rem;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-top: 20px;
+    transition: color 0.3s ease;
+}
+
+.discrete-btn:hover {
+    color: var(--theme-color);
+}
+
+.mute-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 1.2rem;
+    margin-top: 0;
+    text-decoration: none;
+}
+
+/* --- Controles UI --- */
+.hidden-ui {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+}
+
+.toggle-ui-btn {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    z-index: 100;
+    background: rgba(0, 20, 30, 0.65);
+    padding: 10px 15px;
+    border: 1px solid var(--theme-color);
+    border-radius: 4px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+}
+
+.settings-btn {
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 100;
+    background: rgba(0, 20, 30, 0.65);
+    padding: 10px 15px;
+    border: 1px solid var(--theme-color);
+    border-radius: 4px;
+    text-decoration: none;
+    backdrop-filter: blur(8px);
+}
+
+.panel-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+/* --- Controles Nuevos --- */
+.sci-fi-input {
+    background: rgba(0, 20, 30, 0.7);
+    border: 1px solid var(--theme-color);
+    border-radius: 4px;
+    color: var(--theme-color);
+    font-family: 'Courier New', Courier, monospace;
+    padding: 5px 10px;
+    outline: none;
+    color-scheme: dark; /* Ayuda a que el ícono de calendario se vea bien */
+}
+
+/* --- Galería de Favoritos --- */
+.favorites-panel {
+    max-width: 600px;
+    width: 95%;
+}
+
+.gallery-container {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 5px;
+}
+
+.fav-card {
+    display: flex;
+    align-items: center;
+    background: rgba(0, 20, 30, 0.8);
+    border: 1px solid rgba(var(--theme-rgb), 0.4);
+    border-radius: 4px;
+    padding: 10px;
+    gap: 15px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.fav-card:hover {
+    background: rgba(var(--theme-rgb), 0.1);
+    border-color: var(--theme-color);
+}
+
+.fav-card img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: 1px solid var(--theme-color);
+}
+
+.fav-info {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.fav-info h3 {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.delete-fav-btn {
+    background: rgba(255, 50, 50, 0.2);
+    color: #ff6666;
+    border: 1px solid #ff6666;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.delete-fav-btn:hover {
+    background: #ff6666;
+    color: #050510;
+}

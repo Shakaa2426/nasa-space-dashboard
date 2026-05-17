@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Espacial NASA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Modal de Registro de API Key -->
+    <div id="api-key-modal" class="modal-overlay hidden">
+        <div class="modal-content dashboard-panel">
+            <h2>Autenticación Requerida</h2>
+            <p>Identifícate e ingresa tu llave de la NASA para establecer el enlace.<br>
+            <a href="https://api.nasa.gov/" target="_blank" style="color: var(--theme-color); font-size: 0.8rem; text-decoration: none;">Obtén tu API Key gratis aquí</a></p>
+            <input type="text" id="user-name-input" placeholder="Tu Nombre / Alias">
+            <input type="text" id="api-key-input" placeholder="Tu API Key (ej. DEMO_KEY)">
+            <button id="save-key-btn">Iniciar Sistema</button>
+        </div>
+    </div>
+
+    <!-- Modal de Galería de Favoritos -->
+    <div id="favorites-modal" class="modal-overlay hidden">
+        <div class="modal-content dashboard-panel favorites-panel">
+            <h2>Archivos Clasificados</h2>
+            <input type="text" id="fav-search-input" placeholder="Buscar por título...">
+            <div id="favorites-gallery" class="gallery-container"></div>
+            <div class="panel-actions" style="justify-content: center;">
+                <button id="export-fav-btn" class="discrete-btn">Exportar</button>
+                <button id="import-fav-btn" class="discrete-btn">Importar</button>
+                <input type="file" id="import-fav-input" accept=".json" style="display: none;">
+                <button id="close-fav-btn" class="discrete-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Configuración -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content dashboard-panel">
+            <h2>Configuración de Sistemas</h2>
+            <div class="settings-options" style="margin: 20px 0; text-align: left;">
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit;">
+                    <input type="checkbox" id="toggle-theme-chk">
+                    Tema Ámbar (Modo Alerta)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-audio-chk" checked>
+                    Audio Ambiental Dinámico
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-vhs-chk" checked>
+                    Efecto Glitch / VHS (Solo al iniciar)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-crt-chk" checked>
+                    Efecto CRT (Monitor curvo)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-font-chk">
+                    Fuente Retro (Pixel Art)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-speed-chk" checked>
+                    Escritura Humana (Velocidad Variable)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-particles-chk" checked>
+                    Activar efectos visuales (Polvo estelar y estela)
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-contain-chk">
+                    Ver imagen original sin recorte
+                </label>
+                <label style="color: var(--theme-color); cursor: pointer; display: flex; align-items: center; gap: 10px; font-family: inherit; margin-top: 10px;">
+                    <input type="checkbox" id="toggle-widget-chk" checked>
+                    Modo Widget (Ocultar bordes de ventana)
+                </label>
+                <button id="factory-reset-btn" class="delete-fav-btn" style="width: 100%; margin-top: 20px; font-size: 0.9rem;">Restablecer de Fábrica</button>
+            </div>
+            <button id="close-settings-btn" class="discrete-btn">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Búsqueda Clasificada (Easter Eggs) -->
+    <div id="secret-modal" class="modal-overlay hidden">
+        <div class="modal-content dashboard-panel">
+            <h2>Terminal Clasificada</h2>
+            <p>Ingresa el código de acceso para revelar expedientes ocultos de la agencia.</p>
+            <input type="text" id="secret-input" placeholder="Ej. ovni, agujero, marte...">
+            <button id="secret-submit">Decodificar</button>
+            <p id="secret-msg" style="margin-top: 15px; font-weight: bold;"></p>
+            <button id="close-secret-btn" class="discrete-btn">Cerrar Terminal</button>
+        </div>
+    </div>
+
+    <!-- Contenedor para la imagen en alta resolución -->
+    <div id="space-background"></div>
+
+    <!-- Canvas para polvo estelar -->
+    <canvas id="stardust-canvas"></canvas>
+
+    <!-- Panel Sci-Fi de información -->
+    <main class="dashboard-panel">
+        <button id="mute-btn" class="discrete-btn mute-btn" title="Control de Audio" style="font-size: 0.8rem;">Silenciar</button>
+        <h1 id="apod-title">Iniciando sistemas espaciales...</h1>
+        <div class="content-wrapper">
+            <p id="apod-explanation" class="typewriter-text"></p>
+        </div>
+        <div class="panel-actions">
+            <button id="pin-btn" class="discrete-btn">Fijar como Inicio</button>
+            <button id="secret-btn" class="discrete-btn">Archivos Secretos</button>
+            <input type="date" id="apod-date-picker" class="sci-fi-input" title="Máquina del Tiempo">
+            <button id="save-fav-btn" class="discrete-btn">Guardar en Favoritos</button>
+            <button id="view-fav-btn" class="discrete-btn">Ver Favoritos</button>
+            <button id="copy-link-btn" class="discrete-btn">Copiar Enlace</button>
+            <button id="download-btn" class="discrete-btn">Descargar Imagen</button>
+            <button id="reset-key-btn" class="discrete-btn">Cambiar API Key</button>
+        </div>
+    </main>
+
+    <!-- Botón para alternar visibilidad de la UI -->
+    <button id="toggle-ui-btn" class="discrete-btn toggle-ui-btn">Ocultar Panel</button>
+
+    <!-- Botón para abrir configuración -->
+    <button id="settings-btn" class="discrete-btn settings-btn">Configuración</button>
+
+    <!-- Canvas para estela del mouse (reubicado al final) -->
+    <canvas id="particle-canvas"></canvas>
+
+    <script src="app.js"></script>
+</body>
+</html>

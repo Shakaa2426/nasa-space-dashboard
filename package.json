@@ -1,0 +1,24 @@
+{
+  "name": "nasa-space-dashboard",
+  "version": "1.0.0",
+  "description": "Dashboard Espacial de la NASA",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "Hernandez Gallardo Saul Enrique",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.espacio.dashboard",
+    "productName": "Space Dashboard",
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    }
+  }
+}
